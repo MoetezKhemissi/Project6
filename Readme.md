@@ -23,8 +23,7 @@ This README provides instructions on how to set up and run the application. Foll
 To configure the application:
 
 - Open the `config.py` file located in the root directory of your project.
-- Modify the settings to include your desired radius for location and the filenames for your Excel sheets. Here is an example of what the `config.py` might look like:
-
+- Modify the settings to include your desired radius for location and the filenames for your Excel sheets. 
 4. **Adding Excel Files**
 Place your two Excel files (main_data.xlsx and login_data.xlsx) in the project's root directory. These files should match the names specified in the config.py.
 
