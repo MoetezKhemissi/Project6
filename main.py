@@ -19,9 +19,15 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 def login(driver,username_value,password_value):
     # Locate the username and password fields and the submit button
-    username = driver.find_element(By.ID,"user_login")
-    password = driver.find_element(By.ID,"user_pass")
-    submit_button = driver.find_element(By.ID,"wp-submit")
+    username = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.ID, "user_login"))
+        )
+    password = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.ID, "user_pass"))
+        )
+    submit_button = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.ID, "wp-submit"))
+        )
 
     # Input the username and password
     username.send_keys(username_value)
@@ -50,24 +56,32 @@ def navigate_to_import_export(driver):
     time.sleep(1)  # Wait for the submenu to appear
 
     # Click on "Settings" under "Magic Page"
-    settings = driver.find_element(By.CSS_SELECTOR, 'a[href*="magic-page-settings"]')
+    settings = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, 'a[href*="magic-page-settings"]'))
+        )
     settings.click()
     time.sleep(1)  # Wait for the settings page to load
 
     # Click on "Import - Export"
-    import_export = driver.find_element(By.CSS_SELECTOR, 'a[href*="magic-page-import-export"]')
+    import_export = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, 'a[href*="magic-page-import-export"]'))
+        )
     import_export.click()
     time.sleep(1)  # Wait for the import-export page to load
 
 def delete_database_and_navigate(driver):
     try:
         # Click on "Delete Database"
-        delete_button = driver.find_element(By.CSS_SELECTOR, 'span.delete-database[title="Delete Database"]')
+        delete_button=WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, 'span.delete-database[title="Delete Database"]'))
+        )
         delete_button.click()
         time.sleep(1)  # Wait for any confirmation dialog or updates
 
         # Click on "Database & Locations" button
-        db_locations_button = driver.find_element(By.CSS_SELECTOR, 'button.btn.btn-default')
+        db_locations_button=WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, 'button.btn.btn-default'))
+        )
         db_locations_button.click()
         time.sleep(1)  # Wait for the subsequent page or modal to load
 
@@ -78,18 +92,24 @@ def delete_database_and_navigate(driver):
 def import_db(driver, file_path=file_path,db_name="New database"):
     try:
         # Type the database name into the "Database label" input field
-        db_label_input = driver.find_element(By.ID, "import_label")
+        db_label_input=WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.ID, "import_label"))
+        )
         db_label_input.clear()
         db_label_input.send_keys(db_name)
         time.sleep(0.5)  # Give it some time after typing
 
         # Click on the "Continue" button
-        continue_button = driver.find_element(By.ID, "check-database-exist")
+        continue_button=WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.ID, "check-database-exist"))
+        )
         continue_button.click()
         time.sleep(1)  # Wait for any possible page updates
 
         # Handle the file upload
-        file_input = driver.find_element(By.ID, "upload-dropzone-xls-database")
+        file_input=WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "upload-dropzone-xls-database"))
+        )
         file_input.send_keys(os.path.abspath(file_path))
         time.sleep(1)  # Allow time for the file to be uploaded
 
@@ -99,9 +119,10 @@ def import_db(driver, file_path=file_path,db_name="New database"):
 def process_and_wait_for_completion(driver):
     try:
         # Click on the "Process Database" button
-        process_button = driver.find_element(By.ID, "process-database")
+        process_button=WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.ID, "process-database"))
+        )
         process_button.click()
-
         # Wait for the "All Done!" message to appear, indicating the process is complete
         WebDriverWait(driver, 120).until(
             EC.visibility_of_element_located((By.ID, "create-database-release"))
