@@ -216,11 +216,6 @@ def navigate_and_input(driver, slug_first_word):
         logging.error(f"An error occurred: {str(e)}")
 
 
-
-#TODO finish up scraper
-#TODO demo
-#TODO make complete repo and installation steps
-
 def click_confirm_email_button(driver):
     try:
         # Wait until the submit button is clickable
@@ -238,15 +233,18 @@ except ValueError as e:
     logging.error("Failed to preprocess files ( a website dosen't have a corresponding slug): %s", str(e))
 driver=init_driver()
 for website_info in result:
-    logging.info("Starting update for website %s ...", website_info["website"])
-    driver.get(website_info["website"])
-    login(driver,website_info["login"],website_info["password"])
-    click_confirm_email_button(driver)
-    navigate_to_import_export(driver)
-    delete_database_and_navigate(driver)
-    import_db(driver)
-    process_and_wait_for_completion(driver)
-    navigate_and_input(driver,website_info["slug"])
-    logging.info("Finished updating sucessfully for website %s !", website_info["website"])
-    time.sleep(3)
+    try:
+        logging.info("Starting update for website %s ...", website_info["website"])
+        driver.get(website_info["website"])
+        login(driver,website_info["login"],website_info["password"])
+        click_confirm_email_button(driver)
+        navigate_to_import_export(driver)
+        delete_database_and_navigate(driver)
+        import_db(driver)
+        process_and_wait_for_completion(driver)
+        navigate_and_input(driver,website_info["slug"])
+        logging.info("Finished updating sucessfully for website %s !", website_info["website"])
+        time.sleep(3)
+    except :
+        logging.info("Failed to process %s ( Website may be down)", website_info["website"])
 time.sleep(100)
