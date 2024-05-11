@@ -120,21 +120,27 @@ def preprocessing(excel1_path, excel2_path):
     slugs = df1['location slug'].tolist()
     urls = df2.iloc[:, 0].tolist()
     
-    # Split slugs and take only the first word
-    first_words = [slug.split('-')[0] for slug in slugs]
+    # Transform slugs for URL matching and for output
+    joined_slugs = [''.join(slug.split('-')) for slug in slugs]
+    spaced_slugs = [' '.join(slug.split('-')) for slug in slugs]
     
     # Create a map for the output
     results = []
     
-    # Process each url and corresponding first word of slug
-    for url, first_word in zip(urls, first_words):
-        if first_word == "":  # Check if the slug is empty
+    # Process each url and corresponding joined slug
+    for url, joined_slug, spaced_slug in zip(urls, joined_slugs, spaced_slugs):
+        if joined_slug == "":  # Check if the slug is empty
             raise ValueError(f"Error: No slug found for the website {url}")
-        if first_word in url:
+        if joined_slug in url:  # Check if modified slug is in the URL
             login = df2[df2.iloc[:, 0] == url].iloc[0, 1]
             password = df2[df2.iloc[:, 0] == url].iloc[0, 2]
             # Append the details to the results list
-            results.append({'website': url, 'login': login, 'password': password, 'slug': first_word})
+            results.append({
+                'website': url, 
+                'login': login, 
+                'password': password, 
+                'slug': spaced_slug  # Output the slug with spaces
+            })
     
     return results
 
