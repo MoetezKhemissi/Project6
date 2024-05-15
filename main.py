@@ -227,6 +227,7 @@ def click_confirm_email_button(driver):
 
     except Exception as e:
        print()
+status_list = []
 try:
     result = preprocessing(Main_file,Logins_file)
 except ValueError as e:
@@ -244,7 +245,13 @@ for website_info in result:
         process_and_wait_for_completion(driver)
         navigate_and_input(driver,website_info["slug"])
         logging.info("Finished updating sucessfully for website %s !", website_info["website"])
+        status_list.append({'website': website_info["website"], 'status': 'success'})
         time.sleep(3)
     except :
         logging.info("Failed to process %s ( Website may be down)", website_info["website"])
+        status_list.append({'website': website_info["website"], 'status': 'failure'})
+status_df = pd.DataFrame(status_list)
+status_df.to_excel('website_status.xlsx', index=False)
+
+logging.info("Status of all websites has been saved to 'website_status.xlsx'.")
 time.sleep(100)
